@@ -101,6 +101,9 @@ class Reader(ReaderBase):
     def xls(self, file, header, usecols) -> object:
         return pd.read_excel(f'{self.new_file(file)}.xls', header=header, usecols=usecols)
 
+    def csv_header(self):
+        pass
+
 
 
 

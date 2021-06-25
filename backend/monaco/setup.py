@@ -9,9 +9,7 @@ setup_requires = [
 
 install_requires = [
     'django==3.2.4',
-    'html5lib==1.1',
-    'wheel==0.36.2',
-    'wordcloud==1.8.1',
+
 
     ]
 

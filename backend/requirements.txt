@@ -1,0 +1,6 @@
+djangorestframework==3.1.8
+html5lib==1.1
+Pillow==8.2.0
+wheel==0.36.2
+wordcloud==1.8.1
+crispy-forms-gds==0.2.2
