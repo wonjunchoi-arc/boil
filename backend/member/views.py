@@ -1,69 +1,46 @@
-from django.shortcuts import render
-from django.urls import path
-from . import views
-# Create your views here.
-
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import MemberVO
-
-from .serializers import MemberSerializers
-from rest_framework.views import APIView
-from icecream import ic
-from rest_framework.response import Response
-from django.http import Http404
+from django.http.response import JsonResponse
 from rest_framework import status
+from icecream import ic
+
+from member.models import MemberVO
+from member.serializers import MemberSerializers
+from rest_framework.decorators import api_view, parser_classes # 주어진 상황 및 용도에 따라 어떤 객체에 덧붙이는 패턴으로 기능확장이
+from rest_framework import serializers
+from rest_framework.response import Response
 
 
-
-class Members(APIView):
-    def post(self, request):
-        data = request.data['body']
-        ic(data)
-        serializer = MemberSerializers(data=data)
+@api_view(['GET', 'POST','DELETE'])
+@parser_classes([JSONParser])
+def members(request):
+    print('=== 여기까지는 왔따!!')
+    if request.method == 'GET':
+        all_members = MemberVO.objects.all()
+        # ic(all_members)
+        # serializer =MemberSerializers(all_members, many=True)
+        # ic(serializer.data)
+        serializer = MemberSerializers(all_members, many=True)##여기 불러온serialize는 서버에서 끄내올때 쓰느 serialize임
+        return JsonResponse(data=serializer.data, safe=False)#저장하지 않겠당
+    elif request.method == 'POST':
+        new_member = request.data['body']
+        ic(new_member)
+        serializer = MemberSerializers(data=new_member)
         if serializer.is_valid():
             serializer.save()
-            return Response({'result': f'WELCOME, {serializer.data.get("name")}'}, status=201)
-        ic(serializer.errors)
-        return Response(serializer.errors, status=400)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        serializer = MemberSerializers()
+        return JsonResponse(serializer.data, safe=False)  # 저장하지 않겠당
 
-
-class Member(APIView):
-    def post(self, request):
-        data = request.data['body']
-        pk = data['username']
-        user_input_password = data['password']
-        member = self.get_object(pk)
-        if user_input_password == member.password:
-            return Response({'result': 'you are logged in'}, status=201)
-        return HttpResponse(status=104)#이거 뭐징???
-        # print(type(member)): when pk is correct, <class 'member.models.MemberVO'>
-        # print(member.pk) = print(member.username)
-
-    @staticmethod
-    def get_object(pk):
-        try:
-            return MemberVO.objects.get(pk=pk)
-        except MemberVO.DoesNotExist:
-            raise Http404
-
-
-
-# @csrf_exempt
-# def member_list(request):
-#     """
-#     List all code snippets, or create a new snippet.
-#     """
-#     if request.method == 'GET':
-#         snippets = member.objects.all()
-#         serializer = MemberSerializers(snippets, many=True)
-#         return JsonResponse(serializer.data, safe=False)
-#
-#     elif request.method == 'POST':
-#         data = JSONParser().parse(request)
-#         serializer = MemberSerializers(data=data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return JsonResponse(serializer.data, status=201)
-#         return JsonResponse(serializer.errors, status=400)
+@api_view(['GET', 'PUT','DELETE'])
+def member(request, pk):
+    if request.method == 'GET':
+        serializer =MemberSerializers()
+        return JsonResponse(serializer.data, safe=False)#저장하지 않겠당
+    elif request.method == 'POST':
+        serializer = MemberSerializers()
+        return JsonResponse(serializer.data, safe=False)  # 저장하지 않겠당
+    elif request.method == 'DELETE':
+        serializer = MemberSerializers()
+        return JsonResponse(serializer.data, safe=False)  # 저장하지 않겠당

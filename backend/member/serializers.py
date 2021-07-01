@@ -9,8 +9,8 @@ class MemberSerializers(serializers.Serializer):
     name = serializers.CharField()
     email = serializers.EmailField()
     class Meta:
-        model = member
-        fields = '__all__'
+        model = member #우리가 가진 모델이 뭔지 얄려줄거야 MemberVO 사실은 이거구
+        fields = '__all__' #거기서 어떤 필드를 쓸건지 이걸로 정의할거양~~~
 
     def create(self, validated_data):
         return member.objects.create(**validated_data)
