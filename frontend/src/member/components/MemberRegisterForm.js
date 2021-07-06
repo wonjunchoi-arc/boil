@@ -1,11 +1,10 @@
 import React,{useState} from 'react'
 import '../styles/MemberRegister.css'
-import { Button } from '@material-ui/core';
 import {Memberregister} from 'api'
 import {useHistory} from 'react-router'
 
 const MemberRegister = () => {
-  const History = useHistory()
+  const history = useHistory()
   const [userInfo, setUserInfo] = useState({
     username: '',
     password: '',
@@ -28,7 +27,10 @@ const MemberRegister = () => {
     e.preventDefault()
     alert(`전송 클릭: ${JSON.stringify({...userInfo})}`)
     Memberregister({...userInfo})
-    .then(res =>{alert(`회원가입 완료 : ${res.data.result}`)})
+    .then(res =>{
+      alert(`회원가입 완료 : ${res.data.result}`)
+      history.push('/login-form')
+    })
     .catch(err => {alert(`회원가입 실패 : ${err}`)})
     /*const loginRequest = {...userInfo}
     userLogin(loginRequest)

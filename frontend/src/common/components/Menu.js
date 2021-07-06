@@ -1,20 +1,34 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router'
+
+
 
 export const MemberMenu = () => (<nav>
+
+    {
+        localStorage.getItem("loginedMember") ===''?
         <ol>
             <li><Link to='/login-form'>로그인</Link></li>
             <li><Link to='/member-register'>회원가입</Link></li>
-            <li><Link to='/member-detail'>회원정보상세</Link></li>
+
+        </ol>
+
+        :
+        <ol>
+            <li><Link to='/member-detail/g'>회원정보상세</Link></li>
             <li><Link to='/member-modify'>회원정보수정</Link></li>
             <li><Link to='/member-delete'>회원정보삭제</Link></li>
             <li><Link to='/member-list'>회원정보 목록</Link></li>
             <li><Link to='/member-retrieve'>회원정보조회</Link></li>
-
+            <li><Link to='/login-form' onClick={()=>localStorage.setItem("loginedMember","")}>로그아웃</Link></li>
         </ol>
+        }
 </nav>
 
 )
+
+
 export const ItemMenu = () => (<nav>
     <ol>
         <li><Link to='/item-list'>아이템 목록</Link></li>
